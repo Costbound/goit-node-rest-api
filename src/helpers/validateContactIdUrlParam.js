@@ -7,9 +7,9 @@ const validateContactIdUrlParam = (req, res, next) => {
     return next(HttpError(400, "Contact ID is required"));
   }
 
-  const nanoidPattern = /^[A-Za-z0-9_-]{21}$/;
+  const contactIdNum = Number(contactId);
 
-  if (!nanoidPattern.test(contactId)) {
+  if (!Number.isInteger(contactIdNum) || contactIdNum <= 0) {
     return next(HttpError(400, "Invalid contact ID format"));
   }
 
