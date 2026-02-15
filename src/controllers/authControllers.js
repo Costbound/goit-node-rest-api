@@ -1,8 +1,5 @@
 import HttpError from "../helpers/HttpError.js";
-import {
-  findUserByEmail,
-  createUser,
-} from "../services/usersServices.js";
+import { findUserByEmail, createUser } from "../services/usersServices.js";
 
 export const signUpController = async (req, res, next) => {
   const { email, password } = req.body;
@@ -22,7 +19,7 @@ export const signInController = async (req, res, next) => {
   const user = await findUserByEmail(email);
   if (!user || !(await user.validatePassword(password)))
     return next(HttpError(401, "Email or password is wrong"));
-  await user.generateAndSaveToken();
+  await user.generateToken();
 
   res.status(200).json({
     token: user.token,
@@ -30,5 +27,19 @@ export const signInController = async (req, res, next) => {
       email: user.email,
       subscription: user.subscription,
     },
+  });
+};
+
+export const signOutController = async (req, res) => {
+  const { user } = req;
+  await user.deleteToken();
+  res.status(204).send();
+};
+
+export const getCurrentUserController = async (req, res) => {
+  const { user } = req;
+  res.status(200).json({
+    email: user.email,
+    subscription: user.subscription,
   });
 };

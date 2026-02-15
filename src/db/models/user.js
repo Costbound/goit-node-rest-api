@@ -8,17 +8,17 @@ class User extends Model {
     return await bcrypt.compare(candidatePassword, this.password);
   }
 
-  generateToken() {
+  async generateToken() {
     this.token = jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+    await this.save();
     return this;
   }
 
-  async generateAndSaveToken() {
-    this.generateToken();
+  async deleteToken() {
+    this.token = null;
     await this.save();
-    return this;
   }
 }
 
