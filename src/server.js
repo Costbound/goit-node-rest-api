@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 import contactsRouter from "./routes/contactsRouter.js";
+import authRouter from "./routes/authRouter.js";
 import config from "./config.js";
 
 const setupExpressServer = () => {
@@ -12,6 +13,7 @@ const setupExpressServer = () => {
   app.use(cors());
   app.use(express.json());
 
+  app.use("/api/auth", authRouter);
   app.use("/api/contacts", contactsRouter);
 
   app.use((_, res) => {

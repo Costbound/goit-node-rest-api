@@ -17,7 +17,8 @@ export const createContactSchema = Joi.object({
     .email({ tlds: { deny: ["ru"] } })
     .messages({
       "string.email": "Please enter valid email",
-    }),
+    })
+    .required(),
 });
 
 export const updateContactSchema = Joi.object({

@@ -1,13 +1,15 @@
+import "dotenv/config";
 import Joi from "joi";
 
 const envSchema = Joi.object({
   NODE_ENV: Joi.string()
-    .valid("development", "production")
+    .valid("development", "production", "test")
     .required()
     .messages({
       "any.required": "NODE_ENV is required",
       "string.empty": "NODE_ENV cannot be empty",
-      "any.only": "NODE_ENV must be one of 'development' or 'production'",
+      "any.only":
+        "NODE_ENV must be one of 'development', 'production', or 'test'",
     }),
   DATABASE_HOST: Joi.string().required().messages({
     "any.required": "DATABASE_HOST is required",
@@ -30,6 +32,10 @@ const envSchema = Joi.object({
     "string.empty": "DATABASE_PASSWORD cannot be empty",
   }),
   PORT: Joi.number().port(),
+  JWT_SECRET: Joi.string().required().messages({
+    "any.required": "JWT_SECRET is required",
+    "string.empty": "JWT_SECRET cannot be empty",
+  }),
 }).unknown();
 
 const validateEnv = () => {

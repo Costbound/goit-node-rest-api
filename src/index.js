@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { connectDB } from "./db/connect.js";
 import setupExpressServer from "./server.js";
 
