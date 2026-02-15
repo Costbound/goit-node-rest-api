@@ -3,7 +3,6 @@ import { Contact } from "../db/models/index.js";
 export const listContacts = async (userId, options = {}) => {
   const { page = 1, limit = 10 } = options.pagination || {};
   const { onlyFavorites } = options;
-  console.log(onlyFavorites);
   const offset = (page - 1) * limit;
   const where = { owner: userId };
   if (onlyFavorites) {

@@ -9,9 +9,7 @@ class User extends Model {
   }
 
   async generateToken() {
-    this.token = jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    this.token = jwt.sign({ id: this.id }, process.env.JWT_SECRET);
     await this.save();
     return this;
   }

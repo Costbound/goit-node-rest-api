@@ -49,3 +49,19 @@ export const updateStatusContactSchema = Joi.object({
     "any.required": "Favorite status is required",
   }),
 });
+
+export const getAllContactsParamsSchema = Joi.object({
+  page: Joi.number().integer().min(1).messages({
+    "number.base": "Page must be a number",
+    "number.integer": "Page must be an integer",
+    "number.min": "Page must be at least {#limit}",
+  }),
+  limit: Joi.number().integer().min(1).messages({
+    "number.base": "Limit must be a number",
+    "number.integer": "Limit must be an integer",
+    "number.min": "Limit must be at least {#limit}",
+  }),
+  favorite: Joi.boolean().messages({
+    "boolean.base": "Favorite must be a boolean",
+  }),
+});

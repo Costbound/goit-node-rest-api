@@ -13,15 +13,16 @@ import {
   createContactSchema,
   updateContactSchema,
   updateStatusContactSchema,
+  getAllContactsParamsSchema,
 } from "../schemas/contactsSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
-import validateGetContactsQueryParams from "../helpers/validateGetContactsQueryParams.js";
+import validateQueryParams from "../helpers/validateQueryParams.js";
 
 const contactsRouter = express.Router();
 
 contactsRouter.get(
   "/",
-  validateGetContactsQueryParams,
+  validateQueryParams(getAllContactsParamsSchema),
   authenticate,
   getAllContacts,
 );
