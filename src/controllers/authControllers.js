@@ -43,3 +43,14 @@ export const getCurrentUserController = async (req, res) => {
     subscription: user.subscription,
   });
 };
+
+export const updateSubscriptionController = async (req, res, next) => {
+  const { subscription } = req.body;
+  const { user } = req;
+  user.subscription = subscription;
+  await user.save();
+  res.status(200).json({
+    email: user.email,
+    subscription: user.subscription,
+  });
+};
