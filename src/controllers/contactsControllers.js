@@ -3,7 +3,11 @@ import * as contactsService from "../services/contactsServices.js";
 
 export const getAllContacts = async (req, res) => {
   const { id: userId } = req.user;
-  const contacts = await contactsService.listContacts(userId);
+  const { page, limit, favorite } = req.query;
+  const contacts = await contactsService.listContacts(userId, {
+    pagination: { page: page && Number(page), limit: limit && Number(limit) },
+    onlyFavorites: favorite === "true",
+  });
   res.status(200).json(contacts);
 };
 

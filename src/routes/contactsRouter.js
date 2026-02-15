@@ -15,10 +15,16 @@ import {
   updateStatusContactSchema,
 } from "../schemas/contactsSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
+import validateGetContactsQueryParams from "../helpers/validateGetContactsQueryParams.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", authenticate, getAllContacts);
+contactsRouter.get(
+  "/",
+  validateGetContactsQueryParams,
+  authenticate,
+  getAllContacts,
+);
 
 contactsRouter.get(
   "/:id",

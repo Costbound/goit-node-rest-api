@@ -15,6 +15,7 @@ const sequelize = new Sequelize(dbName, user, password, {
       rejectUnauthorized: false,
     },
   },
+  logging: false,
 });
 
 export const connectDB = async () => {
