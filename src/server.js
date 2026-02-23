@@ -5,6 +5,7 @@ import cors from "cors";
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
 import config from "./config.js";
+import { AVATARS_DIR_PATH } from "./constants.js";
 
 const setupExpressServer = () => {
   const app = express();
@@ -15,6 +16,7 @@ const setupExpressServer = () => {
 
   app.use("/api/auth", authRouter);
   app.use("/api/contacts", contactsRouter);
+  app.use("/avatars", express.static(AVATARS_DIR_PATH));
 
   app.use((_, res) => {
     res.status(404).json({ message: "Route not found" });
