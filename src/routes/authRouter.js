@@ -11,8 +11,10 @@ import {
   signOutController,
   getCurrentUserController,
   updateSubscriptionController,
+  updateAvatarController,
 } from "../controllers/authControllers.js";
 import authenticate from "../middlewares/authenticate.js";
+import { uploadAvatar } from "../middlewares/fileUpload.js";
 
 const authRouter = Router();
 
@@ -25,6 +27,12 @@ authRouter.patch(
   validateBody(updateSubscriptionSchema),
   authenticate,
   updateSubscriptionController,
+);
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  uploadAvatar.single("avatar"),
+  updateAvatarController,
 );
 
 export default authRouter;

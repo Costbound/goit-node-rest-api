@@ -31,7 +31,16 @@ const envSchema = Joi.object({
     "any.required": "DATABASE_PASSWORD is required",
     "string.empty": "DATABASE_PASSWORD cannot be empty",
   }),
-  PORT: Joi.number().port(),
+  PORT: Joi.number().port().required().messages({
+    "any.required": "PORT is required",
+    "number.base": "PORT must be a number",
+    "number.port": "PORT must be a valid port number",
+  }),
+  HOST: Joi.string().hostname().required().messages({
+    "any.required": "HOST is required",
+    "string.base": "HOST must be a string",
+    "string.hostname": "HOST must be a valid hostname",
+  }),
   JWT_SECRET: Joi.string().required().messages({
     "any.required": "JWT_SECRET is required",
     "string.empty": "JWT_SECRET cannot be empty",
@@ -51,8 +60,11 @@ const validateEnv = () => {
 const env = validateEnv();
 
 const config = {
-  port: env.PORT,
   nodeEnv: env.NODE_ENV,
+  server: {
+    host: env.HOST,
+    port: env.PORT,
+  },
   database: {
     host: env.DATABASE_HOST,
     port: env.DATABASE_PORT,

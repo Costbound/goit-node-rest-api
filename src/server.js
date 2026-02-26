@@ -2,10 +2,10 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 
-import contactsRouter from "./routes/contactsRouter.js";
-import authRouter from "./routes/authRouter.js";
 import config from "./config.js";
 import { AVATARS_DIR_PATH } from "./constants.js";
+import router from "./routes/index.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 const setupExpressServer = () => {
   const app = express();
@@ -14,24 +14,18 @@ const setupExpressServer = () => {
   app.use(cors());
   app.use(express.json());
 
-  app.use("/api/auth", authRouter);
-  app.use("/api/contacts", contactsRouter);
+  app.use(router);
   app.use("/avatars", express.static(AVATARS_DIR_PATH));
 
   app.use((_, res) => {
     res.status(404).json({ message: "Route not found" });
   });
 
-  app.use((err, req, res, next) => {
-    const { status = 500, message = "Server error" } = err;
-    res
-      .status(status)
-      .json({ message: status === 500 ? "Internal Server Error" : message });
-  });
+  app.use(errorHandler);
 
-  app.listen(config.port || 3000, () => {
+  app.listen(config.server.port, () => {
     console.log(
-      `Server is running. Use our API on port: ${config.port || 3000}`,
+      `Server is running. Use our API on port: ${config.server.port}`,
     );
   });
 };

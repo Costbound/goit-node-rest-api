@@ -1,5 +1,10 @@
 import HttpError from "../helpers/HttpError.js";
-import { findUserByEmail, createUser } from "../services/usersServices.js";
+import {
+  findUserByEmail,
+  createUser,
+  updateUserAvatar,
+} from "../services/usersServices.js";
+import fs from "fs/promises";
 
 export const signUpController = async (req, res, next) => {
   const { email, password } = req.body;
@@ -53,4 +58,19 @@ export const updateSubscriptionController = async (req, res, next) => {
     email: user.email,
     subscription: user.subscription,
   });
+};
+
+export const updateAvatarController = async (req, res, next) => {
+  const { user, file } = req;
+  if (!file) return next(HttpError(400, "Avatar file is required"));
+
+  try {
+    const updatedUser = await updateUserAvatar(user, file);
+    res.status(200).json({ avatarURL: updatedUser.avatarURL });
+  } catch (error) {
+    if (file && file.path) {
+      await fs.unlink(file.path);
+    }
+    next(error);
+  }
 };

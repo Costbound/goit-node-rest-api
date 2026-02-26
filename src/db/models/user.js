@@ -25,11 +25,19 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [6, 100],
+      },
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: {
+        notEmpty: true,
+        isEmail: true,
+      },
     },
     subscription: {
       type: DataTypes.ENUM,
@@ -40,6 +48,10 @@ User.init(
       type: DataTypes.STRING,
       defaultValue: null,
     },
+    avatarURL: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     sequelize,
@@ -48,9 +60,7 @@ User.init(
     timestamps: true,
     hooks: {
       beforeCreate: async (user) => {
-        if (user.password) {
-          user.password = await bcrypt.hash(user.password, 10);
-        }
+        user.password = await bcrypt.hash(user.password, 10);
       },
       beforeUpdate: async (user) => {
         if (user.changed("password")) {
