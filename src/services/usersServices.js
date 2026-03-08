@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import path from "path";
 import gravatar from "gravatar";
 import { AVATARS_DIR_PATH } from "../constants.js";
+import { nanoid } from "nanoid";
+import { sendEmail } from "../utils/emailUtil.js";
 
 export const findUserById = async (id) => {
   return await User.findByPk(id);
@@ -11,6 +13,10 @@ export const findUserById = async (id) => {
 
 export const findUserByEmail = async (email) => {
   return await User.findOne({ where: { email } });
+};
+
+export const findUserByVerificationToken = async (verificationToken) => {
+  return await User.findOne({ where: { verificationToken } });
 };
 
 export const createUser = async ({ email, password }) => {
@@ -41,4 +47,21 @@ export const verifyUserEmail = async (verificationToken) => {
   user.verificationToken = null;
   await user.save();
   return user;
+};
+
+const generateUserVerificationToken = async (user) => {
+  user.verificationToken = nanoid(32);
+  await user.save();
+  return user.verificationToken;
+};
+
+export const sendVerificationEmail = async (user) => {
+  await generateUserVerificationToken(user);
+  const verificationLink = `http://${config.server.host}:${config.server.port}/api/auth/verify/${user.verificationToken}`;
+  await sendEmail({
+    from: config.smtpServer.from,
+    to: user.email,
+    subject: "Email Verification",
+    text: `Please verify your email by clicking the following link: ${verificationLink}`,
+  });
 };

@@ -1,9 +1,11 @@
 import { Router } from "express";
-import validateBody from "../helpers/validateBody.js";
+import validateBody from "../helpers/validation/validateBody.js";
+import validateVerificationTokenUrlParam from "../helpers/validation/validateVerificationTokenUrlParam.js";
 import {
   signUpSchema,
   signInSchema,
   updateSubscriptionSchema,
+  sendVerificationEmailSchema,
 } from "../schemas/authSchemas.js";
 import {
   signUpController,
@@ -13,10 +15,10 @@ import {
   updateSubscriptionController,
   updateAvatarController,
   verifyEmailController,
+  sendVerificationEmailController,
 } from "../controllers/authControllers.js";
 import authenticate from "../middlewares/authenticate.js";
 import { uploadAvatar } from "../middlewares/fileUpload.js";
-import validateVerificationTokenUrlParam from "../helpers/validation/validateVerificationTokenUrlParam.js";
 
 const authRouter = Router();
 
@@ -40,6 +42,11 @@ authRouter.get(
   "/verify/:verificationToken",
   validateVerificationTokenUrlParam,
   verifyEmailController,
+);
+authRouter.post(
+  "/verify",
+  validateBody(sendVerificationEmailSchema),
+  sendVerificationEmailController,
 );
 
 export default authRouter;

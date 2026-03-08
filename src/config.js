@@ -45,6 +45,27 @@ const envSchema = Joi.object({
     "any.required": "JWT_SECRET is required",
     "string.empty": "JWT_SECRET cannot be empty",
   }),
+  SMTP_HOST: Joi.string().required().messages({
+    "any.required": "SMTP_HOST is required",
+    "string.empty": "SMTP_HOST cannot be empty",
+  }),
+  SMTP_PORT: Joi.number().port().optional().messages({
+    "number.base": "SMTP_PORT must be a number",
+    "number.port": "SMTP_PORT must be a valid port number",
+  }),
+  SMTP_USER: Joi.string().required().messages({
+    "any.required": "SMTP_USER is required",
+    "string.empty": "SMTP_USER cannot be empty",
+  }),
+  SMTP_PASSWORD: Joi.string().required().messages({
+    "any.required": "SMTP_PASSWORD is required",
+    "string.empty": "SMTP_PASSWORD cannot be empty",
+  }),
+  SMTP_FROM: Joi.string().email().required().messages({
+    "any.required": "SMTP_FROM is required",
+    "string.email": "SMTP_FROM must be a valid email address",
+    "string.empty": "SMTP_FROM cannot be empty",
+  }),
 }).unknown();
 
 const validateEnv = () => {
@@ -76,6 +97,13 @@ const config = {
       require: true,
       rejectUnauthorized: false,
     },
+  },
+  smtpServer: {
+    host: env.SMTP_HOST,
+    port: env.SMTP_PORT,
+    user: env.SMTP_USER,
+    password: env.SMTP_PASSWORD,
+    from: env.SMTP_FROM,
   },
 };
 

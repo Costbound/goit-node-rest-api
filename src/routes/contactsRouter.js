@@ -7,8 +7,9 @@ import {
   updateContact,
   updateStatusContact,
 } from "../controllers/contactsControllers.js";
-import validateContactIdUrlParam from "../helpers/validateContactIdUrlParam.js";
-import validateBody from "../helpers/validateBody.js";
+import validateContactIdUrlParam from "../helpers/validation/validateContactIdUrlParam.js";
+import validateBody from "../helpers/validation/validateBody.js";
+import validateQueryParams from "../helpers/validation/validateQueryParams.js";
 import {
   createContactSchema,
   updateContactSchema,
@@ -16,7 +17,6 @@ import {
   getAllContactsParamsSchema,
 } from "../schemas/contactsSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
-import validateQueryParams from "../helpers/validateQueryParams.js";
 
 const contactsRouter = express.Router();
 

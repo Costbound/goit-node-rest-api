@@ -33,3 +33,10 @@ export const updateSubscriptionSchema = Joi.object({
       "any.required": "Subscription is required",
     }),
 });
+
+export const sendVerificationEmailSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.email": "Please enter a valid email",
+    "any.required": "missing required field email",
+  }),
+});

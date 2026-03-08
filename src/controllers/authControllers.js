@@ -3,8 +3,8 @@ import {
   findUserByEmail,
   createUser,
   updateUserAvatar,
-  findUserByVerificationToken,
   verifyUserEmail,
+  sendVerificationEmail,
 } from "../services/usersServices.js";
 import fs from "fs/promises";
 
@@ -13,6 +13,11 @@ export const signUpController = async (req, res, next) => {
   const user = await findUserByEmail(email);
   if (user) return next(HttpError(409, "Email in use"));
   const newUser = await createUser({ email, password });
+  try {
+    await sendVerificationEmail(newUser);
+  } catch (error) {
+    console.log("Failed to send verification email:", error);
+  }
   res.status(201).json({
     user: {
       email: newUser.email,
@@ -26,6 +31,7 @@ export const signInController = async (req, res, next) => {
   const user = await findUserByEmail(email);
   if (!user || !(await user.validatePassword(password)))
     return next(HttpError(401, "Email or password is wrong"));
+  if (!user.verify) return next(HttpError(403, "Email not verified"));
   await user.generateToken();
 
   res.status(200).json({
@@ -82,4 +88,18 @@ export const verifyEmailController = async (req, res, next) => {
   const user = await verifyUserEmail(verificationToken);
   if (!user) return next(HttpError(404, "User not found"));
   res.status(200).json({ message: "Verification successful" });
+};
+
+export const sendVerificationEmailController = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await findUserByEmail(email);
+  if (!user) return next(HttpError(404, "User not found"));
+  if (user.verify)
+    return next(HttpError(400, "Verification has already been passed"));
+  try {
+    await sendVerificationEmail(user);
+  } catch (error) {
+    console.log("Failed to send verification email:", error);
+  }
+  res.status(200).json({ message: "Verification email sent" });
 };
