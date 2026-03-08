@@ -52,6 +52,13 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    verify: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    verificationToken: {
+      type: DataTypes.STRING,
+    },
   },
   {
     sequelize,

@@ -1,4 +1,4 @@
-import HttpError from "./HttpError.js";
+import HttpError from "../HttpError.js";
 
 const validateQueryParams = (schema) => {
   const func = (req, _, next) => {

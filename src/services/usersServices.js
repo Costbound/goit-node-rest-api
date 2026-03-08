@@ -32,3 +32,13 @@ export const updateUserAvatar = async (user, file) => {
   await user.save();
   return user;
 };
+
+export const verifyUserEmail = async (verificationToken) => {
+  const user = await findUserByVerificationToken(verificationToken);
+  if (!user) return null;
+
+  user.verify = true;
+  user.verificationToken = null;
+  await user.save();
+  return user;
+};

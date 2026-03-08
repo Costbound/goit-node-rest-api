@@ -12,9 +12,11 @@ import {
   getCurrentUserController,
   updateSubscriptionController,
   updateAvatarController,
+  verifyEmailController,
 } from "../controllers/authControllers.js";
 import authenticate from "../middlewares/authenticate.js";
 import { uploadAvatar } from "../middlewares/fileUpload.js";
+import validateVerificationTokenUrlParam from "../helpers/validation/validateVerificationTokenUrlParam.js";
 
 const authRouter = Router();
 
@@ -33,6 +35,11 @@ authRouter.patch(
   authenticate,
   uploadAvatar.single("avatar"),
   updateAvatarController,
+);
+authRouter.get(
+  "/verify/:verificationToken",
+  validateVerificationTokenUrlParam,
+  verifyEmailController,
 );
 
 export default authRouter;

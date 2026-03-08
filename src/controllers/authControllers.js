@@ -3,6 +3,8 @@ import {
   findUserByEmail,
   createUser,
   updateUserAvatar,
+  findUserByVerificationToken,
+  verifyUserEmail,
 } from "../services/usersServices.js";
 import fs from "fs/promises";
 
@@ -73,4 +75,11 @@ export const updateAvatarController = async (req, res, next) => {
     }
     next(error);
   }
+};
+
+export const verifyEmailController = async (req, res, next) => {
+  const { verificationToken } = req.params;
+  const user = await verifyUserEmail(verificationToken);
+  if (!user) return next(HttpError(404, "User not found"));
+  res.status(200).json({ message: "Verification successful" });
 };

@@ -1,4 +1,4 @@
-import HttpError from "./HttpError.js";
+import HttpError from "../HttpError.js";
 
 const validateContactIdUrlParam = (req, res, next) => {
   const { id: contactId } = req.params;
